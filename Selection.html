@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Property</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #8e2de2, #4a00e0);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: "Poppins", sans-serif;
+      color: white;
+      text-align: center;
+    }
+    .options {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .option-card {
+      background: white;
+      color: #4a00e0;
+      width: 170px;
+      height: 170px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .option-card:hover {
+      transform: scale(1.07);
+    }
+    button{
+      margin-top: 3rem;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      background: white;
+      color: #4a00e0;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome to Field Tracker</h1>
+  <p>Select what you want to view</p>
+
+  <div class="options">
+    <div class="option-card" onclick="goToProperty('house')">
+      🏠 <br> Rental House
+    </div>
+    <div class="option-card" onclick="goToProperty('apartment')">
+      🏢 <br> Apartment
+    </div>
+    <div class="option-card" onclick="goToProperty('land')">
+      🌳 <br> Land
+    </div>
+  </div>
+
+  <button onclick="logout()">← Logout</button>
+
+<script>
+
+  function goToProperty(type){
+    // save the selected type for next page
+    localStorage.setItem("selectedType", type);
+    window.location.href = "properties.html";
+  }
+
+  function logout(){
+    window.location.href = "login.html";
+  }
+
+</script>
+
+</body>
+</html>
