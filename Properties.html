@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Property List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      padding: 20px;
+    }
+
+    #title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    #search {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #999;
+      font-size: 16px;
+    }
+
+    .property-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .property-card h3 {
+      margin: 0 0 10px;
+    }
+
+    .status-available {
+      color: green;
+      font-weight: bold;
+    }
+
+    .status-unavailable {
+      color: red;
+      font-weight: bold;
+    }
+
+    #backBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2 id="title">Properties</h2>
+
+  <input type="text" id="search" placeholder="Search by Location / Street / Owner">
+
+  <div id="list"></div>
+
+  <button id="backBtn" onclick="back()">⬅ Back</button>
+
+  <script>
+    const properties = {
+      house: [
+  { location:"Coimbatore - R.S. Puram", street:"R.S. Puram Road", price:"₹50L", size:"1800 sq.ft", owner:"Anu", contact:"9008899001", status:"Available" },
+  { location:"Chennai - Adyar", street:"LB Road", price:"₹1.2Cr", size:"2800 sq.ft", owner:"Sathish", contact:"9007788002", status:"Unavailable" },
+  { location:"Vellore - Katpadi", street:"Katpadi Bypass", price:"₹85L", size:"2400 sq.ft", owner:"Anand", contact:"9556677882", status:"Available" },
+  { location:"Salem - Omalur", street:"Omalur Road", price:"₹70L", size:"2100 sq.ft", owner:"Ravi", contact:"9001122338", status:"Unavailable" },
+  { location:"Erode - Solar", street:"Bhavani Road", price:"₹65L", size:"1800 sq.ft", owner:"Kumar", contact:"9445566772", status:"Available" },
+  { location:"Tiruppur - Avinashi", street:"Avinashi Road", price:"₹83L", size:"2200 sq.ft", owner:"Venkatesh", contact:"9009988778", status:"Unavailable" },
+  { location:"Madurai - Anna Nagar", street:"Temple Street", price:"₹75L", size:"2000 sq.ft", owner:"Kannan", contact:"9003344668", status:"Available" },
+  { location:"Thoothukudi - Port Road", street:"Port Road", price:"₹70L", size:"1950 sq.ft", owner:"Manju", contact:"9001122339", status:"Unavailable" },
+  { location:"Kanyakumari - Nagercoil", street:"Main Road", price:"₹68L", size:"1850 sq.ft", owner:"Kamal", contact:"9556677883", status:"Available" },
+  { location:"Tirunelveli - Palayamkottai", street:"New Bus Stand Road", price:"₹60L", size:"1800 sq.ft", owner:"Murugan", contact:"9000088800", status:"Available" },
+  { location:"Namakkal - Paramathi", street:"Main Road", price:"₹80L", size:"2400 sq.ft", owner:"Saravanan", contact:"7667766776", status:"Unavailable" },
+  { location:"Chennai - Velachery", street:"Velachery Main Road", price:"₹1.15Cr", size:"2500 sq.ft", owner:"Nisha", contact:"9007788992", status:"Available" },
+  { location:"Coimbatore - Peelamedu", street:"Lakshmi Mills Road", price:"₹90L", size:"2100 sq.ft", owner:"Mohan", contact:"9000000001", status:"Unavailable" },
+  { location:"Trichy - KK Nagar", street:"East Street", price:"₹72L", size:"1900 sq.ft", owner:"Arun", contact:"9000000006", status:"Available" },
+  { location:"Tiruchendur - Main Beach Road", street:"Main Beach Road", price:"₹69L", size:"1850 sq.ft", owner:"Saroja", contact:"9000000038", status:"Unavailable" },
+  { location:"Salem - Mettur Road", street:"Mettur Road", price:"₹75L", size:"2000 sq.ft", owner:"Arthi", contact:"9000000035", status:"Available" },
+  { location:"Pondicherry - Auroville", street:"Auroville Road", price:"₹1.05Cr", size:"2500 sq.ft", owner:"Maya", contact:"9000000089", status:"Unavailable" },
+  { location:"Nagapattinam - Coastal", street:"Ayyanar Street", price:"₹62L", size:"1800 sq.ft", owner:"Sundar", contact:"9000000050", status:"Available" },
+  { location:"Tirupattur - Green Meadows", street:"NH48", price:"₹68L", size:"1850 sq.ft", owner:"Sathya", contact:"9000000046", status:"Unavailable" },
+  { location:"Kumbakonam - Temple View", street:"East Street", price:"₹59L", size:"1700 sq.ft", owner:"Radha", contact:"9000000049", status:"Available" },
+   { location:"Chennai - T. Nagar", street:"Bazaar Road", price:"₹1.2Cr", size:"2600 sq.ft", owner:"Ramesh", contact:"9000000018", status:"Available" },
+  { location:"Chennai - OMR", street:"OMR Road", price:"₹95L", size:"2200 sq.ft", owner:"Priyanka", contact:"9000000019", status:"Unavailable" },
+  { location:"Chennai - Porur", street:"Arcot Road", price:"₹88L", size:"2100 sq.ft", owner:"Mani", contact:"9000000020", status:"Available" },
+  { location:"Hosur - Industrial View", street:"NH44 Bypass", price:"₹65L", size:"1800 sq.ft", owner:"Sunder", contact:"9000000021", status:"Unavailable" },
+  { location:"Kanyakumari - Sea Breeze", street:"Beach Road", price:"₹70L", size:"1850 sq.ft", owner:"Asha", contact:"9000000022", status:"Available" },
+  { location:"Nagercoil - Central Residency", street:"Main Road", price:"₹60L", size:"1750 sq.ft", owner:"Kamal", contact:"9000000023", status:"Unavailable" },
+  { location:"Nagapattinam - Lighthouse", street:"Coastal Road", price:"₹58L", size:"1700 sq.ft", owner:"Radha", contact:"9000000024", status:"Available" },
+  { location:"Puducherry - White Town", street:"Promenade", price:"₹85L", size:"2000 sq.ft", owner:"Vijay", contact:"9000000025", status:"Unavailable" },
+  { location:"Thanjavur - Big Temple", street:"Kumbakonam Road", price:"₹55L", size:"1600 sq.ft", owner:"Bala", contact:"9000000026", status:"Available" },
+  { location:"Kovilpatti - Pearl", street:"Main Bazaar", price:"₹50L", size:"1500 sq.ft", owner:"Lakshman", contact:"9000000027", status:"Unavailable" },
+  { location:"Salem - Steel City", street:"Sona College Road", price:"₹68L", size:"1900 sq.ft", owner:"Preethi", contact:"9000000028", status:"Available" },
+  { location:"Madurai - Koodal Nagar", street:"Kamarajar Road", price:"₹72L", size:"1950 sq.ft", owner:"Raju", contact:"9000000029", status:"Unavailable" },
+  { location:"Coimbatore - Race Course", street:"Gandhipuram Road", price:"₹95L", size:"2300 sq.ft", owner:"Srinivasan", contact:"9000000030", status:"Available" },
+  { location:"Tiruppur - Textile Town", street:"Avinashi Road", price:"₹66L", size:"1800 sq.ft", owner:"Venkatesh", contact:"9000000031", status:"Unavailable" },
+  { location:"Dindigul - Hill View", street:"Natham Road", price:"₹60L", size:"1700 sq.ft", owner:"Priyam", contact:"9000000032", status:"Available" },
+  { location:"Karur - Riverbank", street:"Trichy Road", price:"₹62L", size:"1750 sq.ft", owner:"Gopi", contact:"9000000033", status:"Unavailable" },
+  { location:"Karur - Central Plaza", street:"Pallapatti Road", price:"₹55L", size:"1600 sq.ft", owner:"Uma", contact:"9000000034", status:"Available" },
+  { location:"Salem - Hilltop", street:"Mettur Road", price:"₹70L", size:"1900 sq.ft", owner:"Arthi", contact:"9000000035", status:"Unavailable" },
+  { location:"Erode - Textile", street:"Sathy Road", price:"₹62L", size:"1800 sq.ft", owner:"Harish", contact:"9000000036", status:"Available" },
+  { location:"Vellore - Rajiv Nagar", street:"Walajah Road", price:"₹68L", size:"1850 sq.ft", owner:"Naveen", contact:"9000000037", status:"Unavailable" },{ location:"Tiruchendur - Beach View", street:"Main Beach Road", price:"₹63L", size:"1750 sq.ft", owner:"Saroja", contact:"9000000038", status:"Available" },
+  { location:"Thoothukudi - Portside", street:"Port Road", price:"₹70L", size:"1850 sq.ft", owner:"Manju", contact:"9000000039", status:"Unavailable" },
+  { location:"Cuddalore - Shoreline", street:"Beach Road", price:"₹68L", size:"1800 sq.ft", owner:"Anitha", contact:"9000000040", status:"Available" },
+  { location:"Mayiladuthurai - Riverfront", street:"Kumbakonam Road", price:"₹60L", size:"1700 sq.ft", owner:"Vasu", contact:"9000000041", status:"Unavailable" },
+  { location:"Pondicherry - Serenity", street:"Aurobindo Street", price:"₹80L", size:"2000 sq.ft", owner:"Karthik", contact:"9000000042", status:"Available" },
+  { location:"Kanchipuram - Silk City", street:"Kanchi Road", price:"₹62L", size:"1800 sq.ft", owner:"Megha", contact:"9000000043", status:"Unavailable" },
+  { location:"Thoothukudi - Harbour View", street:"Anna Salai", price:"₹72L", size:"1900 sq.ft", owner:"Babu", contact:"9000000044", status:"Available" },
+  { location:"Salem - Riverside", street:"Mettur Dam Road", price:"₹68L", size:"1850 sq.ft", owner:"Divakar", contact:"9000000045", status:"Unavailable" },
+  { location:"Tirupattur - Green Meadows", street:"NH48", price:"₹60L", size:"1700 sq.ft", owner:"Sathya", contact:"9000000046", status:"Available" },
+  { location:"Palani - Hill Crest", street:"Dindigul Road", price:"₹55L", size:"1600 sq.ft", owner:"Rajalakshmi", contact:"9000000047", status:"Unavailable" },
+  { location:"Salem - New Town", street:"New Bus Stand Road", price:"₹62L", size:"1800 sq.ft", owner:"Kiran", contact:"9000000048", status:"Available" },
+  { location:"Kumbakonam - Temple View", street:"East Street", price:"₹58L", size:"1700 sq.ft", owner:"Radha", contact:"9000000049", status:"Unavailable" },
+  { location:"Nagapattinam - Coastal Residency", street:"Ayyanar Street", price:"₹55L", size:"1600 sq.ft", owner:"Sundar", contact:"9000000050", status:"Available" },
+  { location:"Chidambaram - Nataraja", street:"Temple Road", price:"₹60L", size:"1700 sq.ft", owner:"Latha", contact:"9000000051", status:"Unavailable" },
+  { location:"Virudhunagar - Spice City", street:"Main Street", price:"₹53L", size:"1550 sq.ft", owner:"Muthu", contact:"9000000052", status:"Available" },
+  { location:"Sivakasi - Matchbox", street:"Industrial Road", price:"₹50L", size:"1500 sq.ft", owner:"Selvan", contact:"9000000053", status:"Unavailable" },
+  { location:"Karaikudi - Chettinad", street:"Pudukottai Road", price:"₹55L", size:"1600 sq.ft", owner:"Revathi", contact:"9000000054", status:"Available" },
+  { location:"Ramanathapuram - Sea Breeze", street:"Pearl Fishery Road", price:"₹53L", size:"1550 sq.ft", owner:"Imran", contact:"9000000055", status:"Unavailable" },
+  { location:"Coimbatore - Ram Nagar", street:"R.S. Puram", price:"₹80L", size:"2100 sq.ft", owner:"Anu", contact:"9000000056", status:"Available" },
+  { location:"Coimbatore - Brookfield", street:"Brookefields", price:"₹1.05Cr", size:"2650 sq.ft", owner:"Murali", contact:"9000000057", status:"Unavailable" },
+  { location:"Madurai - Simmakkal", street:"Simmakkal Road", price:"₹74L", size:"1850 sq.ft", owner:"Rameswari", contact:"9000000058", status:"Available" },
+  { location:"Madurai - Thoppu", street:"Alagar Kovil Road", price:"₹70L", size:"1800 sq.ft", owner:"Gowri", contact:"9000000059", status:"Unavailable" },
+  { location:"Tiruchirapalli - Teppakulam", street:"Big Bazaar Street", price:"₹80L", size:"1900 sq.ft", owner:"Sakthi", contact:"9000000060", status:"Available" },
+  { location:"Tiruchirapalli - Golden Gate", street:"Pattur Road", price:"₹84L", size:"1950 sq.ft", owner:"Bharath", contact:"9000000061", status:"Unavailable" },
+  { location:"Tuticorin - Pearl", street:"Tirunelveli Road", price:"₹76L", size:"1850 sq.ft", owner:"Nandhini", contact:"9000000062", status:"Available" },
+  { location:"Kumbakonam - Holy Town", street:"Darasuram Road", price:"₹60L", size:"1700 sq.ft", owner:"Murugesan", contact:"9000000063", status:"Unavailable" },
+  { location:"Thoothukudi - Marina View", street:"Marina Road", price:"₹78L", size:"1900 sq.ft", owner:"Jessie", contact:"9000000064", status:"Available" },
+  { location:"Erode - Kongu", street:"Central Road", price:"₹65L", size:"1800 sq.ft", owner:"Shanthi", contact:"9000000065", status:"Unavailable" },
+  { location:"Salem - Vellalapatti", street:"Vellalapatti Road", price:"₹63L", size:"1750 sq.ft", owner:"Prakash", contact:"9000000066", status:"Available" },
+  { location:"Vellore - Hospital Road", street:"Vellore Hospital Road", price:"₹72L", size:"1900 sq.ft", owner:"Renu", contact:"9000000067", status:"Unavailable" },
+  { location:"Pondicherry - Heritage", street:"Mission Street", price:"₹82L", size:"2000 sq.ft", owner:"Kumaravel", contact:"9000000068", status:"Available" },
+  { location:"Cuddalore - Fort", street:"Fort St", price:"₹66L", size:"1800 sq.ft", owner:"Jayanthi", contact:"9000000069", status:"Unavailable" },
+  { location:"Mayiladuthurai - River View", street:"Thanjavur Road", price:"₹64L", size:"1750 sq.ft", owner:"Saravan", contact:"9000000070", status:"Available" },
+  { location:"Karur - Textile", street:"Madhurantagam Road", price:"₹62L", size:"1700 sq.ft", owner:"Divya", contact:"9000000071", status:"Unavailable" },
+  { location:"Salem - Collectorate", street:"Collectorate Road", price:"₹68L", size:"1800 sq.ft", owner:"Saravanan", contact:"9000000072", status:"Available" },
+  { location:"Madurai - Pasumalai", street:"Pasumalai Road", price:"₹70L", size:"1850 sq.ft", owner:"Geetha", contact:"9000000073", status:"Unavailable" },
+  { location:"Chennai - Marina", street:"Marina Beach Road", price:"₹1.05Cr", size:"2450 sq.ft", owner:"Kishore", contact:"9000000074", status:"Available" },
+  { location:"Chennai - Kodambakkam", street:"Kodambakkam High Road", price:"₹75L", size:"2000 sq.ft", owner:"Nandha", contact:"9000000075", status:"Unavailable" },
+  { location:"Coimbatore - Gandhipuram Central", street:"100 Feet Road", price:"₹72L", size:"1950 sq.ft", owner:"Bhanu", contact:"9000000076", status:"Available" },
+  { location:"Tirunelveli - Natham", street:"Nagarcoil Road", price:"₹60L", size:"1700 sq.ft", owner:"Hemalatha", contact:"9000000077", status:"Unavailable" }
+],
+
+      apartment: [
+  { location:"Coimbatore - Peelamedu Apartment", street:"Lakshmi Mills Road", price:"₹30,000/month", size:"3BHK - 1400 sq.ft", owner:"Mohan", contact:"9000000001", status:"Available" },
+  { location:"Coimbatore - Gandhipuram Residency", street:"Cross Cut Road", price:"₹15,000/month", size:"2BHK - 900 sq.ft", owner:"Rajesh", contact:"9000000002", status:"Unavailable" },
+  { location:"Coimbatore - Saibaba Colony Towers", street:"Sathy Road", price:"₹22,000/month", size:"2BHK - 1000 sq.ft", owner:"Priya", contact:"9000000003", status:"Available" },
+  { location:"Madurai - Anna Nagar Apartments", street:"Temple Street", price:"₹18,500/month", size:"2BHK - 850 sq.ft", owner:"Kannan", contact:"9000000004", status:"Available" },
+  { location:"Madurai - Melamadai Flats", street:"North Veli Street", price:"₹13,000/month", size:"1BHK - 620 sq.ft", owner:"Selvi", contact:"9000000005", status:"Unavailable" },
+  { location:"Trichy - KK Nagar Residency", street:"East Street", price:"₹12,000/month", size:"2BHK - 850 sq.ft", owner:"Arun", contact:"9000000006", status:"Available" },
+  { location:"Trichy - Cantonment Heights", street:"Railway Station Road", price:"₹18,500/month", size:"2BHK - 950 sq.ft", owner:"Siva", contact:"9000000007", status:"Unavailable" },
+  { location:"Tirunelveli - Palayamkottai Towers", street:"New Bus Stand Road", price:"₹10,000/month", size:"1BHK - 680 sq.ft", owner:"Murugan", contact:"9000000008", status:"Available" },
+  { location:"Tirunelveli - River View Apartments", street:"Kamarajar Salai", price:"₹14,500/month", size:"2BHK - 880 sq.ft", owner:"Meena", contact:"9000000009", status:"Unavailable" },
+  { location:"Salem - Omalur Road Residency", street:"Omalur Road", price:"₹11,500/month", size:"2BHK - 820 sq.ft", owner:"Ravi", contact:"9000000010", status:"Available" },
+  { location:"Salem - Town Hall Apartments", street:"Town Hall Road", price:"₹13,200/month", size:"2BHK - 870 sq.ft", owner:"Lakshmi", contact:"9000000011", status:"Unavailable" },
+  { location:"Erode - Solar Residency", street:"Bhavani Road", price:"₹9,800/month", size:"1BHK - 600 sq.ft", owner:"Kumar", contact:"9000000012", status:"Available" },
+  { location:"Erode - Perundurai Flats", street:"Perundurai Road", price:"₹8,900/month", size:"1BHK - 580 sq.ft", owner:"Vidya", contact:"9000000013", status:"Unavailable" },
+  { location:"Vellore - Katpadi Residency", street:"Katpadi Bypass", price:"₹16,000/month", size:"2BHK - 980 sq.ft", owner:"Anand", contact:"9000000014", status:"Available" },
+  { location:"Vellore - LT Gardens", street:"Officer's Line", price:"₹14,500/month", size:"2BHK - 920 sq.ft", owner:"Divya", contact:"9000000015", status:"Unavailable" },
+  { location:"Chennai - Adyar Heights", street:"LB Road", price:"₹35,000/month", size:"3BHK - 1500 sq.ft", owner:"Sathish", contact:"9000000016", status:"Available" },
+  { location:"Chennai - Velachery Plaza", street:"Velachery Main Road", price:"₹28,000/month", size:"2BHK - 1100 sq.ft", owner:"Nisha", contact:"9000000017", status:"Unavailable" },
+  { location:"Chennai - T. Nagar Residency", street:"Bazaar Road", price:"₹32,000/month", size:"3BHK - 1300 sq.ft", owner:"Ramesh", contact:"9000000018", status:"Available" },
+  { location:"Chennai - OMR Silicon Homes", street:"OMR Road", price:"₹26,500/month", size:"2BHK - 1050 sq.ft", owner:"Priyanka", contact:"9000000019", status:"Unavailable" },
+  { location:"Chennai - Porur Meadows", street:"Arcot Road", price:"₹22,000/month", size:"2BHK - 950 sq.ft", owner:"Mani", contact:"9000000020", status:"Available" },
+  { location:"Hosur - Industrial View Apartments", street:"NH44 Bypass", price:"₹10,500/month", size:"1BHK - 620 sq.ft", owner:"Sunder", contact:"9000000021", status:"Unavailable" },
+  { location:"Kanyakumari - Sea Breeze Flats", street:"Beach Road", price:"₹14,000/month", size:"2BHK - 800 sq.ft", owner:"Asha", contact:"9000000022", status:"Available" },
+  { location:"Nagercoil - Central Residency", street:"Main Road", price:"₹11,200/month", size:"2BHK - 820 sq.ft", owner:"Kamal", contact:"9000000023", status:"Unavailable" },
+  { location:"Nagapattinam - Lighthouse Apartments", street:"Coastal Road", price:"₹9,500/month", size:"1BHK - 600 sq.ft", owner:"Radha", contact:"9000000024", status:"Available" },
+  { location:"Puducherry - White Town Flats", street:"Promenade", price:"₹20,000/month", size:"2BHK - 980 sq.ft", owner:"Vijay", contact:"9000000025", status:"Unavailable" },
+  { location:"Thanjavur - Big Temple Residency", street:"Kumbakonam Road", price:"₹8,800/month", size:"1BHK - 560 sq.ft", owner:"Bala", contact:"9000000026", status:"Available" },
+  { location:"Kovilpatti - Pearl Residency", street:"Main Bazaar", price:"₹7,900/month", size:"1BHK - 540 sq.ft", owner:"Lakshman", contact:"9000000027", status:"Unavailable" },
+  { location:"Salem - Steel City Apartments", street:"Sona College Road", price:"₹12,300/month", size:"2BHK - 860 sq.ft", owner:"Preethi", contact:"9000000028", status:"Available" },
+  { location:"Madurai - Koodal Nagar Towers", street:"Kamarajar Road", price:"₹15,500/month", size:"2BHK - 900 sq.ft", owner:"Raju", contact:"9000000029", status:"Unavailable" },
+  { location:"Coimbatore - Race Course Residency", street:"Gandhipuram Road", price:"₹24,000/month", size:"3BHK - 1250 sq.ft", owner:"Srinivasan", contact:"9000000030", status:"Available" },
+  { location:"Tiruppur - Textile Town Flats", street:"Avinashi Road", price:"₹11,900/month", size:"2BHK - 840 sq.ft", owner:"Venkatesh", contact:"9000000031", status:"Unavailable" },
+  { location:"Dindigul - Hill View Apartments", street:"Natham Road", price:"₹9,700/month", size:"1BHK - 610 sq.ft", owner:"Priyam", contact:"9000000032", status:"Available" },
+  { location:"Karur - Riverbank Residency", street:"Trichy Road", price:"₹10,400/month", size:"2BHK - 780 sq.ft", owner:"Gopi", contact:"9000000033", status:"Unavailable" },
+  { location:"Karur - Central Plaza", street:"Pallapatti Road", price:"₹9,900/month", size:"1BHK - 590 sq.ft", owner:"Uma", contact:"9000000034", status:"Available" },
+  { location:"Salem - Hilltop Residency", street:"Mettur Road", price:"₹13,600/month", size:"2BHK - 900 sq.ft", owner:"Arthi", contact:"9000000035", status:"Unavailable" },
+  { location:"Erode - Textile Residency", street:"Sathy Road", price:"₹10,200/month", size:"2BHK - 820 sq.ft", owner:"Harish", contact:"9000000036", status:"Available" },
+  { location:"Vellore - Rajiv Nagar Flats", street:"Walajah Road", price:"₹12,700/month", size:"2BHK - 890 sq.ft", owner:"Naveen", contact:"9000000037", status:"Unavailable" },
+  { location:"Tiruchendur - Beach View Apartments", street:"Main Beach Road", price:"₹11,000/month", size:"1BHK - 640 sq.ft", owner:"Saroja", contact:"9000000038", status:"Available" },
+  { location:"Thoothukudi - Portside Residency", street:"Port Road", price:"₹13,400/month", size:"2BHK - 920 sq.ft", owner:"Manju", contact:"9000000039", status:"Unavailable" },
+  { location:"Cuddalore - Shoreline Flats", street:"Beach Road", price:"₹10,800/month", size:"2BHK - 840 sq.ft", owner:"Anitha", contact:"9000000040", status:"Available" },
+  { location:"Mayiladuthurai - Riverfront Apartments", street:"Kumbakonam Road", price:"₹9,300/month", size:"1BHK - 600 sq.ft", owner:"Vasu", contact:"9000000041", status:"Unavailable" },
+  { location:"Pondicherry - Serenity Residency", street:"Aurobindo Street", price:"₹19,500/month", size:"2BHK - 1000 sq.ft", owner:"Karthik", contact:"9000000042", status:"Available" },
+  { location:"Kanchipuram - Silk City Apartments", street:"Kanchi Road", price:"₹12,900/month", size:"2BHK - 880 sq.ft", owner:"Megha", contact:"9000000043", status:"Unavailable" },
+  { location:"Thoothukudi - Harbour View Flats", street:"Anna Salai", price:"₹14,200/month", size:"2BHK - 930 sq.ft", owner:"Babu", contact:"9000000044", status:"Available" },
+  { location:"Salem - Riverside Residency", street:"Mettur Dam Road", price:"₹13,000/month", size:"2BHK - 910 sq.ft", owner:"Divakar", contact:"9000000045", status:"Unavailable" },
+  { location:"Tirupattur - Green Meadows", street:"NH48", price:"₹10,600/month", size:"1BHK - 610 sq.ft", owner:"Sathya", contact:"9000000046", status:"Available" },
+  { location:"Palani - Hill Crest Apartments", street:"Dindigul Road", price:"₹8,700/month", size:"1BHK - 560 sq.ft", owner:"Rajalakshmi", contact:"9000000047", status:"Unavailable" },
+  { location:"Salem - New Town Residency", street:"New Bus Stand Road", price:"₹11,800/month", size:"2BHK - 830 sq.ft", owner:"Kiran", contact:"9000000048", status:"Available" },
+  { location:"Kumbakonam - Temple View Flats", street:"East Street", price:"₹9,200/month", size:"1BHK - 580 sq.ft", owner:"Radha", contact:"9000000049", status:"Unavailable" },
+  { location:"Nagapattinam - Coastal Residency", street:"Ayyanar Street", price:"₹8,900/month", size:"1BHK - 560 sq.ft", owner:"Sundar", contact:"9000000050", status:"Available" },
+  { location:"Chidambaram - Nataraja Flats", street:"Temple Road", price:"₹9,700/month", size:"1BHK - 600 sq.ft", owner:"Latha", contact:"9000000051", status:"Unavailable" },
+  { location:"Virudhunagar - Spice City Apartments", street:"Main Street", price:"₹8,500/month", size:"1BHK - 540 sq.ft", owner:"Muthu", contact:"9000000052", status:"Available" },
+  { location:"Sivakasi - Matchbox Residency", street:"Industrial Road", price:"₹7,900/month", size:"1BHK - 520 sq.ft", owner:"Selvan", contact:"9000000053", status:"Unavailable" },
+  { location:"Karaikudi - Chettinad Flats", street:"Pudukottai Road", price:"₹9,100/month", size:"1BHK - 570 sq.ft", owner:"Revathi", contact:"9000000054", status:"Available" },
+  { location:"Ramanathapuram - Sea Breeze Residency", street:"Pearl Fishery Road", price:"₹8,800/month", size:"1BHK - 560 sq.ft", owner:"Imran", contact:"9000000055", status:"Unavailable" },
+  { location:"Coimbatore - Ram Nagar Apartments", street:"R.S. Puram", price:"₹20,000/month", size:"2BHK - 1020 sq.ft", owner:"Anu", contact:"9000000056", status:"Available" },
+  { location:"Coimbatore - Brookfield Residency", street:"Brookefields", price:"₹27,000/month", size:"3BHK - 1320 sq.ft", owner:"Murali", contact:"9000000057", status:"Unavailable" },
+  { location:"Madurai - Simmakkal Flats", street:"Simmakkal Road", price:"₹12,400/month", size:"2BHK - 860 sq.ft", owner:"Rameswari", contact:"9000000058", status:"Available" },
+  { location:"Madurai - Thoppu Residency", street:"Alagar Kovil Road", price:"₹11,600/month", size:"2BHK - 840 sq.ft", owner:"Gowri", contact:"9000000059", status:"Unavailable" },
+  { location:"Tiruchirapalli - Teppakulam Apartments", street:"Big Bazaar Street", price:"₹13,900/month", size:"2BHK - 910 sq.ft", owner:"Sakthi", contact:"9000000060", status:"Available" },
+  { location:"Tiruchirapalli - Golden Gate Flats", street:"Pattur Road", price:"₹14,500/month", size:"2BHK - 940 sq.ft", owner:"Bharath", contact:"9000000061", status:"Unavailable" },
+  { location:"Tuticorin - Pearl Residency", street:"Tirunelveli Road", price:"₹12,200/month", size:"2BHK - 860 sq.ft", owner:"Nandhini", contact:"9000000062", status:"Available" },
+  { location:"Kumbakonam - Holy Town Flats", street:"Darasuram Road", price:"₹9,400/month", size:"1BHK - 600 sq.ft", owner:"Murugesan", contact:"9000000063", status:"Unavailable" },
+  { location:"Thoothukudi - Marina View", street:"Marina Road", price:"₹13,100/month", size:"2BHK - 910 sq.ft", owner:"Jessie", contact:"9000000064", status:"Available" },
+  { location:"Erode - Kongu Residency", street:"Central Road", price:"₹10,900/month", size:"2BHK - 840 sq.ft", owner:"Shanthi", contact:"9000000065", status:"Unavailable" },
+  { location:"Salem - Vellalapatti Flats", street:"Vellalapatti Road", price:"₹11,300/month", size:"2BHK - 860 sq.ft", owner:"Prakash", contact:"9000000066", status:"Available" },
+  { location:"Vellore - Hospital Road Apartments", street:"Vellore Hospital Road", price:"₹13,500/month", size:"2BHK - 930 sq.ft", owner:"Renu", contact:"9000000067", status:"Unavailable" },
+  { location:"Pondicherry - Heritage Residency", street:"Mission Street", price:"₹18,200/month", size:"2BHK - 980 sq.ft", owner:"Kumaravel", contact:"9000000068", status:"Available" },
+  { location:"Cuddalore - Fort Residency", street:"Fort St", price:"₹10,700/month", size:"1BHK - 610 sq.ft", owner:"Jayanthi", contact:"9000000069", status:"Unavailable" },
+  { location:"Mayiladuthurai - River View", street:"Thanjavur Road", price:"₹9,600/month", size:"1BHK - 600 sq.ft", owner:"Saravan", contact:"9000000070", status:"Available" },
+  { location:"Karur - Textile Residency", street:"Madhurantagam Road", price:"₹10,100/month", size:"1BHK - 580 sq.ft", owner:"Divya", contact:"9000000071", status:"Unavailable" },
+  { location:"Salem - Collectorate Flats", street:"Collectorate Road", price:"₹12,600/month", size:"2BHK - 880 sq.ft", owner:"Saravanan", contact:"9000000072", status:"Available" },
+  { location:"Madurai - Pasumalai Apartments", street:"Pasumalai Road", price:"₹13,300/month", size:"2BHK - 900 sq.ft", owner:"Geetha", contact:"9000000073", status:"Unavailable" },
+  { location:"Chennai - Marina Residency", street:"Marina Beach Road", price:"₹34,000/month", size:"3BHK - 1450 sq.ft", owner:"Kishore", contact:"9000000074", status:"Available" },
+  { location:"Chennai - Kodambakkam Flats", street:"Kodambakkam High Road", price:"₹24,500/month", size:"2BHK - 1000 sq.ft", owner:"Nandha", contact:"9000000075", status:"Unavailable" },
+  { location:"Coimbatore - Gandhipuram Central", street:"100 Feet Road", price:"₹21,000/month", size:"2BHK - 980 sq.ft", owner:"Bhanu", contact:"9000000076", status:"Available" },
+  { location:"Tirunelveli - Natham Residency", street:"Nagarcoil Road", price:"₹9,500/month", size:"1BHK - 600 sq.ft", owner:"Hemalatha", contact:"9000000077", status:"Unavailable" },
+  { location:"Sivakasi - Industrial Residency", street:"Factory Road", price:"₹8,600/month", size:"1BHK - 540 sq.ft", owner:"Raju", contact:"9000000078", status:"Available" },
+  { location:"Ramanathapuram - Sea View", street:"Karaikudi Road", price:"₹9,800/month", size:"1BHK - 580 sq.ft", owner:"Shiva", contact:"9000000079", status:"Unavailable" },
+  { location:"Tiruppur - Cotton City Flats", street:"Textile Road", price:"₹12,000/month", size:"2BHK - 860 sq.ft", owner:"Karthi", contact:"9000000080", status:"Available" },
+  { location:"Salem - Vellode Residency", street:"Erode Highway", price:"₹11,000/month", size:"2BHK - 820 sq.ft", owner:"Suresh", contact:"9000000081", status:"Unavailable" },
+  { location:"Madurai - S.S. Colony Apartments", street:"Anna Salai", price:"₹12,800/month", size:"2BHK - 880 sq.ft", owner:"Meena", contact:"9000000082", status:"Available" },
+  { location:"Coimbatore - Peelamedu Meadows", street:"Ganapathy Road", price:"₹23,500/month", size:"2BHK - 1050 sq.ft", owner:"Arjun", contact:"9000000083", status:"Unavailable" },
+  { location:"Chennai - Ambattur Residency", street:"Ambattur Industrial Estate", price:"₹19,000/month", size:"2BHK - 950 sq.ft", owner:"Rohit", contact:"9000000084", status:"Available" },
+  { location:"Chennai - Nungambakkam Flats", street:"College Road", price:"₹29,500/month", size:"3BHK - 1250 sq.ft", owner:"Suma", contact:"9000000085", status:"Unavailable" },
+  { location:"Tiruchirapalli - Kottapattu Residency", street:"Kottapattu Road", price:"₹11,700/month", size:"2BHK - 850 sq.ft", owner:"Vimal", contact:"9000000086", status:"Available" },
+  { location:"Tuticorin - Bay View Flats", street:"Bay Area", price:"₹13,600/month", size:"2BHK - 920 sq.ft", owner:"Priyanka", contact:"9000000087", status:"Unavailable" },
+  { location:"Kanyakumari - Cape Residency", street:"Vattakottai Road", price:"₹15,000/month", size:"2BHK - 900 sq.ft", owner:"Raj", contact:"9000000088", status:"Available" },
+  { location:"Pondicherry - Auroville Flats", street:"Auroville Road", price:"₹21,000/month", size:"2BHK - 1000 sq.ft", owner:"Maya", contact:"9000000089", status:"Unavailable" },
+  { location:"Vellore - Golden Residency", street:"Gandhi Road", price:"₹13,900/month", size:"2BHK - 940 sq.ft", owner:"Nila", contact:"9000000090", status:"Available" },
+  { location:"Coimbatore - Brookfield Enclave", street:"Avinashi Road", price:"₹26,800/month", size:"3BHK - 1350 sq.ft", owner:"Kalyan", contact:"9000000091", status:"Unavailable" },
+  { location:"Madurai - Anna Nagar Central", street:"Anna Salai", price:"₹16,400/month", size:"2BHK - 920 sq.ft", owner:"Sonia", contact:"9000000092", status:"Available" },
+  { location:"Trichy - Golden Residency", street:"Srirangam Road", price:"₹14,200/month", size:"2BHK - 900 sq.ft", owner:"Ganesan", contact:"9000000093", status:"Unavailable" },
+  { location:"Salem - Mount View Flats", street:"Mount Road", price:"₹12,400/month", size:"2BHK - 860 sq.ft", owner:"Kavitha", contact:"9000000094", status:"Available" },
+  { location:"Erode - Rivergate Apartments", street:"Borough Road", price:"₹10,500/month", size:"1BHK - 610 sq.ft", owner:"Malar", contact:"9000000095", status:"Unavailable" },
+  { location:"Tirunelveli - City Center Flats", street:"Civic Center Road", price:"₹11,900/month", size:"2BHK - 850 sq.ft", owner:"Raghu", contact:"9000000096", status:"Available" },
+  { location:"Dindigul - Palace Residency", street:"Natham Main Road", price:"₹9,400/month", size:"1BHK - 600 sq.ft", owner:"Padmini", contact:"9000000097", status:"Unavailable" },
+  { location:"Kovilpatti - Spice Residency", street:"Court Road", price:"₹8,700/month", size:"1BHK - 550 sq.ft", owner:"Ramu", contact:"9000000098", status:"Available" },
+  { location:"Nagercoil - Central Park Flats", street:"Kottar Road", price:"₹10,200/month", size:"2BHK - 800 sq.ft", owner:"Thamizh", contact:"9000000099", status:"Unavailable" },
+  { location:"Namakkal - Paramathi Enclave", street:"Main Road", price:"₹9,800/month", size:"1BHK - 580 sq.ft", owner:"Saravanan", contact:"9000000100", status:"Available" }
+
+      ],
+      land: [
+  { location:"Tirunelveli - Palayamkottai", street:"New Bus Stand Road", price:"₹6L per cent", size:"1800 sq.ft", soil:"Red Soil", owner:"Murugan", contact:"9000088800", status:"Available" },
+  { location:"Namakkal - Paramathi", street:"Main Road", price:"₹8L per cent", size:"2400 sq.ft", soil:"Black Soil", owner:"Saravanan", contact:"7667766776", status:"Unavailable" },
+
+  { location:"Madurai - Thirunagar", street:"West Cross Street", price:"₹7L per cent", size:"2000 sq.ft", soil:"Loamy Soil", owner:"Prakash", contact:"9090011122", status:"Available" },
+  { location:"Salem - Suramangalam", street:"Gandhi Street", price:"₹5.5L per cent", size:"1750 sq.ft", soil:"Red Soil", owner:"Vijay", contact:"9001234567", status:"Unavailable" },
+  { location:"Erode - Perundurai", street:"Market Road", price:"₹6.8L per cent", size:"2100 sq.ft", soil:"Black Soil", owner:"Karthik", contact:"9884433221", status:"Available" },
+  { location:"Coimbatore - Sulur", street:"Airport Road", price:"₹7.2L per cent", size:"1900 sq.ft", soil:"Sandy Soil", owner:"Sathish", contact:"9099988776", status:"Unavailable" },
+  { location:"Thanjavur - Thiruvaiyaru", street:"Temple Road", price:"₹5.9L per cent", size:"1650 sq.ft", soil:"Clay Soil", owner:"Aravind", contact:"9123456789", status:"Available" },
+  { location:"Karur - Kulithalai", street:"East Car Street", price:"₹6.3L per cent", size:"2300 sq.ft", soil:"Loamy Soil", owner:"Bala", contact:"9445566778", status:"Available" },
+  { location:"Vellore - Katpadi", street:"Hospital Road", price:"₹8.1L per cent", size:"2500 sq.ft", soil:"Red Soil", owner:"Ramesh", contact:"9556677889", status:"Unavailable" },
+  { location:"Dindigul - Oddanchatram", street:"Main Bazaar", price:"₹5.7L per cent", size:"1600 sq.ft", soil:"Sandy Soil", owner:"Mani", contact:"9334455667", status:"Available" },
+
+  { location:"Tiruppur - Avinashi", street:"Bus Stand Road", price:"₹7.4L per cent", size:"2200 sq.ft", soil:"Red Soil", owner:"Selvam", contact:"9442211334", status:"Available" },
+  { location:"Kanyakumari - Nagercoil", street:"South Street", price:"₹6.6L per cent", size:"2000 sq.ft", soil:"Black Soil", owner:"Vinoth", contact:"9000044221", status:"Unavailable" },
+  { location:"Ramanathapuram - Paramakudi", street:"North Mada Street", price:"₹5.3L per cent", size:"1700 sq.ft", soil:"Clay Soil", owner:"Muthu", contact:"9888855443", status:"Available" },
+  { location:"Virudhunagar - Aruppukottai", street:"Mill Road", price:"₹6.2L per cent", size:"1950 sq.ft", soil:"Loamy Soil", owner:"Logesh", contact:"9447799001", status:"Unavailable" },
+  { location:"Nagapattinam - Velankanni", street:"Beach Road", price:"₹7.9L per cent", size:"2600 sq.ft", soil:"Sandy Soil", owner:"Joseph", contact:"9886677554", status:"Available" },
+  { location:"Sivagangai - Karaikudi", street:"Chettinad Street", price:"₹6.1L per cent", size:"1800 sq.ft", soil:"Black Soil", owner:"Ravi", contact:"9122277884", status:"Unavailable" },
+  { location:"Krishnagiri - Hosur", street:"Industrial Road", price:"₹8.5L per cent", size:"2700 sq.ft", soil:"Red Soil", owner:"Kishore", contact:"9099123456", status:"Available" },
+  { location:"Cuddalore - Chidambaram", street:"Temple Road", price:"₹5.4L per cent", size:"1550 sq.ft", soil:"Clay Soil", owner:"Murali", contact:"9000034561", status:"Available" },
+  { location:"Pudukottai - Aranthangi", street:"Big Street", price:"₹5.8L per cent", size:"1900 sq.ft", soil:"Loamy Soil", owner:"Sankar", contact:"9551122334", status:"Unavailable" },
+  { location:"Thoothukudi - Kovilpatti", street:"Market Line", price:"₹6.7L per cent", size:"2050 sq.ft", soil:"Black Soil", owner:"Suresh", contact:"9005566778", status:"Available" },
+  { location:"Tirunelveli - Pettai", street:"West Street", price:"₹6.2L per cent", size:"1850 sq.ft", soil:"Red Soil", owner:"Naveen", contact:"9099887765", status:"Available" },
+{ location:"Madurai - KK Nagar", street:"Ganga Street", price:"₹7.1L per cent", size:"2100 sq.ft", soil:"Black Soil", owner:"Ragul", contact:"9553322110", status:"Unavailable" },
+{ location:"Theni - Andipatti", street:"Thamaraikulam Road", price:"₹5.6L per cent", size:"1700 sq.ft", soil:"Sandy Soil", owner:"Karthi", contact:"9445566442", status:"Available" },
+{ location:"Coimbatore - Saravanampatti", street:"IT Park Road", price:"₹8.9L per cent", size:"2600 sq.ft", soil:"Red Soil", owner:"Manoj", contact:"9332267890", status:"Available" },
+{ location:"Chennai - Tambaram", street:"Mudichur Road", price:"₹10.2L per cent", size:"2400 sq.ft", soil:"Clay Soil", owner:"Sridhar", contact:"9551177112", status:"Unavailable" },
+{ location:"Salem - Ammapet", street:"Vinayagar Street", price:"₹6.5L per cent", size:"1800 sq.ft", soil:"Loamy Soil", owner:"Hari", contact:"9884477993", status:"Available" },
+{ location:"Erode - Chithode", street:"Park Road", price:"₹7.2L per cent", size:"2000 sq.ft", soil:"Black Soil", owner:"Dinesh", contact:"9000012344", status:"Unavailable" },
+{ location:"Vellore - Bagayam", street:"College Road", price:"₹8.3L per cent", size:"2100 sq.ft", soil:"Red Soil", owner:"Arun Kumar", contact:"9448833122", status:"Available" },
+{ location:"Karur - Aravakurichi", street:"Bus Road", price:"₹5.9L per cent", size:"1650 sq.ft", soil:"Clay Soil", owner:"Sankar", contact:"9334455773", status:"Available" },
+{ location:"Dindigul - Batlagundu", street:"Anna Salai", price:"₹6.4L per cent", size:"1900 sq.ft", soil:"Sandy Soil", owner:"Madhan", contact:"9090901234", status:"Unavailable" },
+{ location:"Tiruppur - Palladam", street:"Mill Road", price:"₹7.8L per cent", size:"2200 sq.ft", soil:"Black Soil", owner:"Siva", contact:"9444031131", status:"Available" },
+{ location:"Kanyakumari - Colachel", street:"Beach Side Road", price:"₹6.3L per cent", size:"1750 sq.ft", soil:"Red Soil", owner:"Antony", contact:"9551199665", status:"Unavailable" },
+{ location:"Ramanathapuram - Rameswaram", street:"Temple Street", price:"₹8.1L per cent", size:"2400 sq.ft", soil:"Sandy Soil", owner:"Kannan", contact:"9888734523", status:"Available" },
+{ location:"Virudhunagar - Sivakasi", street:"Match Factory Road", price:"₹6L per cent", size:"1900 sq.ft", soil:"Loamy Soil", owner:"Varun", contact:"9000044556", status:"Available" },
+{ location:"Nagapattinam - Mayiladuthurai", street:"Cauvery Road", price:"₹7.5L per cent", size:"2100 sq.ft", soil:"Clay Soil", owner:"Babu", contact:"9099221144", status:"Unavailable" },
+{ location:"Sivagangai - Devakottai", street:"Old Bus Stand Road", price:"₹5.8L per cent", size:"1700 sq.ft", soil:"Black Soil", owner:"Madhan", contact:"9445566007", status:"Available" },
+{ location:"Krishnagiri - Shoolagiri", street:"NH Road", price:"₹9.4L per cent", size:"2500 sq.ft", soil:"Red Soil", owner:"Kishore", contact:"9553388990", status:"Available" },
+{ location:"Cuddalore - Neyveli", street:"Mine Road", price:"₹6L per cent", size:"1800 sq.ft", soil:"Clay Soil", owner:"Guna", contact:"9887766554", status:"Unavailable" },
+{ location:"Pudukottai - Keeranur", street:"Market Road", price:"₹5.4L per cent", size:"1600 sq.ft", soil:"Sandy Soil", owner:"Arun", contact:"9000088844", status:"Available" },
+{ location:"Thoothukudi - Sathankulam", street:"Main Bazaar", price:"₹6.9L per cent", size:"1950 sq.ft", soil:"Red Soil", owner:"Suresh Kumar", contact:"9440022115", status:"Unavailable" },
+{ location:"Tirunelveli - Ambasamudram", street:"River Road", price:"₹7.1L per cent", size:"2000 sq.ft", soil:"Loamy Soil", owner:"Murugan", contact:"9000088801", status:"Available" },
+{ location:"Madurai - Thirunagar", street:"Anna Salai", price:"₹6.8L per cent", size:"1850 sq.ft", soil:"Red Soil", owner:"Ramesh", contact:"9445566778", status:"Unavailable" },
+{ location:"Coimbatore - Peelamedu", street:"Avinashi Road", price:"₹8.5L per cent", size:"2300 sq.ft", soil:"Clay Soil", owner:"Karthik", contact:"9550011223", status:"Available" },
+{ location:"Chennai - Adyar", street:"LB Road", price:"₹10.5L per cent", size:"2500 sq.ft", soil:"Black Soil", owner:"Sathish", contact:"9001122334", status:"Unavailable" },
+{ location:"Salem - Suramangalam", street:"Mettur Road", price:"₹6.2L per cent", size:"1800 sq.ft", soil:"Red Soil", owner:"Arthi", contact:"9442233445", status:"Available" },
+{ location:"Erode - Bhavani", street:"Main Road", price:"₹7.3L per cent", size:"2000 sq.ft", soil:"Loamy Soil", owner:"Kumar", contact:"9553344556", status:"Unavailable" },
+{ location:"Vellore - Katpadi", street:"Katpadi Bypass", price:"₹8L per cent", size:"2100 sq.ft", soil:"Clay Soil", owner:"Anand", contact:"9004455667", status:"Available" },
+{ location:"Karur - Pugalur", street:"Trichy Road", price:"₹6.1L per cent", size:"1750 sq.ft", soil:"Red Soil", owner:"Gopi", contact:"9445566779", status:"Unavailable" },
+{ location:"Dindigul - Vadamadurai", street:"Natham Road", price:"₹5.9L per cent", size:"1650 sq.ft", soil:"Sandy Soil", owner:"Priya", contact:"9006677889", status:"Available" },
+{ location:"Tiruppur - Karumathampatti", street:"Avinashi Road", price:"₹7.7L per cent", size:"2200 sq.ft", soil:"Black Soil", owner:"Venkatesh", contact:"9551122335", status:"Unavailable" },
+{ location:"Kanyakumari - Nagercoil", street:"Main Road", price:"₹6.5L per cent", size:"1850 sq.ft", soil:"Red Soil", owner:"Asha", contact:"9007788990", status:"Available" },
+{ location:"Ramanathapuram - Paramakudi", street:"Temple Road", price:"₹8L per cent", size:"2300 sq.ft", soil:"Sandy Soil", owner:"Imran", contact:"9448899001", status:"Unavailable" },
+{ location:"Virudhunagar - Rajapalayam", street:"Main Street", price:"₹6.2L per cent", size:"1900 sq.ft", soil:"Loamy Soil", owner:"Muthu", contact:"9009988776", status:"Available" },
+{ location:"Nagapattinam - Vedaranyam", street:"Coastal Road", price:"₹7.3L per cent", size:"2100 sq.ft", soil:"Clay Soil", owner:"Sundar", contact:"9552233445", status:"Unavailable" },
+{ location:"Sivagangai - Karaikudi", street:"Pudukottai Road", price:"₹5.8L per cent", size:"1700 sq.ft", soil:"Black Soil", owner:"Revathi", contact:"9003344556", status:"Available" },
+{ location:"Krishnagiri - Hosur", street:"Industrial Road", price:"₹9.1L per cent", size:"2500 sq.ft", soil:"Red Soil", owner:"Sunder", contact:"9445566001", status:"Unavailable" },
+{ location:"Cuddalore - Chidambaram", street:"Temple Road", price:"₹6.1L per cent", size:"1800 sq.ft", soil:"Clay Soil", owner:"Anitha", contact:"9001122445", status:"Available" },
+{ location:"Pudukottai - Pudukottai", street:"Market Road", price:"₹5.5L per cent", size:"1600 sq.ft", soil:"Sandy Soil", owner:"Ramu", contact:"9552233446", status:"Unavailable" },
+{ location:"Thoothukudi - Kovilpatti", street:"Court Road", price:"₹6.9L per cent", size:"1950 sq.ft", soil:"Red Soil", owner:"Lakshman", contact:"9006677880", status:"Available" },
+{ location:"Tirunelveli - Tenkasi", street:"Main Road", price:"₹7L per cent", size:"2000 sq.ft", soil:"Loamy Soil", owner:"Murali", contact:"9445566999", status:"Unavailable" },
+{ location:"Madurai - Thirupparankundram", street:"Temple Road", price:"₹6.8L per cent", size:"1850 sq.ft", soil:"Red Soil", owner:"Geetha", contact:"9003344667", status:"Available" },
+{ location:"Coimbatore - Singanallur", street:"Trichy Road", price:"₹8.2L per cent", size:"2250 sq.ft", soil:"Clay Soil", owner:"Arjun", contact:"9555566778", status:"Unavailable" },
+{ location:"Chennai - Velachery", street:"Velachery Main Road", price:"₹10.2L per cent", size:"2500 sq.ft", soil:"Black Soil", owner:"Nisha", contact:"9007788991", status:"Available" },
+{ location:"Salem - Omalur", street:"Omalur Road", price:"₹6.5L per cent", size:"1900 sq.ft", soil:"Loamy Soil", owner:"Ravi", contact:"9448899002", status:"Unavailable" },
+{ location:"Erode - Perundurai", street:"Perundurai Road", price:"₹7L per cent", size:"2000 sq.ft", soil:"Red Soil", owner:"Vidya", contact:"9001122336", status:"Available" },
+{ location:"Vellore - Katpadi", street:"Gandhi Road", price:"₹8.1L per cent", size:"2200 sq.ft", soil:"Clay Soil", owner:"Anand", contact:"9552233667", status:"Unavailable" },
+{ location:"Karur - Kulithalai", street:"Trichy Road", price:"₹6.2L per cent", size:"1800 sq.ft", soil:"Sandy Soil", owner:"Gopi", contact:"9003344557", status:"Available" },
+{ location:"Dindigul - Palani", street:"Dindigul Road", price:"₹5.9L per cent", size:"1700 sq.ft", soil:"Red Soil", owner:"Padmini", contact:"9445566779", status:"Unavailable" },
+{ location:"Tiruppur - Avinashi", street:"Avinashi Road", price:"₹7.5L per cent", size:"2200 sq.ft", soil:"Black Soil", owner:"Venkatesh", contact:"9009988777", status:"Available" },
+{ location:"Kanyakumari - Nagercoil", street:"Vattakottai Road", price:"₹6.3L per cent", size:"1850 sq.ft", soil:"Loamy Soil", owner:"Asha", contact:"9556677880", status:"Unavailable" },
+{ location:"Ramanathapuram - Rameswaram", street:"Temple Road", price:"₹8L per cent", size:"2300 sq.ft", soil:"Sandy Soil", owner:"Imran", contact:"9003344558", status:"Available" },
+{ location:"Virudhunagar - Srivilliputhur", street:"Main Street", price:"₹6L per cent", size:"1800 sq.ft", soil:"Red Soil", owner:"Muthu", contact:"9445566770", status:"Unavailable" },
+{ location:"Nagapattinam - Nagapattinam", street:"Coastal Road", price:"₹7.2L per cent", size:"2100 sq.ft", soil:"Clay Soil", owner:"Sundar", contact:"9001122446", status:"Available" },
+{ location:"Sivagangai - Karaikudi", street:"Pudukkottai Road", price:"₹5.8L per cent", size:"1700 sq.ft", soil:"Black Soil", owner:"Revathi", contact:"9552233447", status:"Unavailable" },
+{ location:"Krishnagiri - Hosur", street:"NH44", price:"₹9.2L per cent", size:"2500 sq.ft", soil:"Red Soil", owner:"Sunder", contact:"9006677881", status:"Available" },
+{ location:"Cuddalore - Chidambaram", street:"Temple Street", price:"₹6.1L per cent", size:"1800 sq.ft", soil:"Clay Soil", owner:"Anitha", contact:"9445566990", status:"Unavailable" },
+{ location:"Pudukottai - Pudukottai", street:"Main Bazaar", price:"₹5.5L per cent", size:"1600 sq.ft", soil:"Sandy Soil", owner:"Ramu", contact:"9003344559", status:"Available" },
+{ location:"Thoothukudi - Tiruchendur", street:"Beach Road", price:"₹6.9L per cent", size:"1950 sq.ft", soil:"Red Soil", owner:"Lakshman", contact:"9556677881", status:"Unavailable" },
+{ location:"Tirunelveli - Nanguneri", street:"Nanguneri Road", price:"₹7L per cent", size:"2000 sq.ft", soil:"Loamy Soil", owner:"Murali", contact:"9001122337", status:"Available" },
+{ location:"Madurai - Koodal Nagar", street:"Kamarajar Road", price:"₹6.7L per cent", size:"1850 sq.ft", soil:"Red Soil", owner:"Geetha", contact:"9445566771", status:"Unavailable" },
+{ location:"Coimbatore - R.S. Puram", street:"R.S. Puram Road", price:"₹8.5L per cent", size:"2300 sq.ft", soil:"Black Soil", owner:"Anu", contact:"9008899001", status:"Available" },
+{ location:"Chennai - Adyar", street:"LB Road", price:"₹12L per cent", size:"2800 sq.ft", soil:"Clay Soil", owner:"Sathish", contact:"9007788002", status:"Unavailable" },
+{ location:"Vellore - Katpadi", street:"Katpadi Bypass", price:"₹9.2L per cent", size:"2400 sq.ft", soil:"Loamy Soil", owner:"Anand", contact:"9556677882", status:"Available" },
+{ location:"Salem - Omalur", street:"Omalur Road", price:"₹7.8L per cent", size:"2100 sq.ft", soil:"Red Soil", owner:"Ravi", contact:"9001122338", status:"Unavailable" },
+{ location:"Erode - Solar", street:"Bhavani Road", price:"₹6.5L per cent", size:"1800 sq.ft", soil:"Sandy Soil", owner:"Kumar", contact:"9445566772", status:"Available" },
+{ location:"Tiruppur - Avinashi", street:"Avinashi Road", price:"₹8.3L per cent", size:"2200 sq.ft", soil:"Black Soil", owner:"Venkatesh", contact:"9009988778", status:"Unavailable" },
+{ location:"Madurai - Anna Nagar", street:"Temple Street", price:"₹7.5L per cent", size:"2000 sq.ft", soil:"Clay Soil", owner:"Kannan", contact:"9003344668", status:"Available" },
+{ location:"Thoothukudi - Port Road", street:"Port Road", price:"₹7L per cent", size:"1950 sq.ft", soil:"Loamy Soil", owner:"Manju", contact:"9001122339", status:"Unavailable" },
+{ location:"Kanyakumari - Nagercoil", street:"Main Road", price:"₹6.8L per cent", size:"1850 sq.ft", soil:"Sandy Soil", owner:"Kamal", contact:"9556677883", status:"Available" },
+{ location:"Tirunelveli - Palayamkottai", street:"New Bus Stand Road", price:"₹6L per cent", size:"1800 sq.ft", soil:"Red Soil", owner:"Murugan", contact:"9000088800", status:"Available" },
+{ location:"Namakkal - Paramathi", street:"Main Road", price:"₹8L per cent", size:"2400 sq.ft", soil:"Black Soil", owner:"Saravanan", contact:"7667766776", status:"Unavailable" },
+{ location:"Chennai - Velachery", street:"Velachery Main Road", price:"₹11.5L per cent", size:"2500 sq.ft", soil:"Red Soil", owner:"Nisha", contact:"9007788992", status:"Available" },
+{ location:"Coimbatore - Peelamedu", street:"Lakshmi Mills Road", price:"₹9L per cent", size:"2100 sq.ft", soil:"Clay Soil", owner:"Mohan", contact:"9000000001", status:"Unavailable" },
+{ location:"Trichy - KK Nagar", street:"East Street", price:"₹7.2L per cent", size:"1900 sq.ft", soil:"Loamy Soil", owner:"Arun", contact:"9000000006", status:"Available" },
+{ location:"Tiruchendur - Main Beach Road", street:"Main Beach Road", price:"₹6.9L per cent", size:"1850 sq.ft", soil:"Sandy Soil", owner:"Saroja", contact:"9000000038", status:"Unavailable" },
+{ location:"Salem - Mettur Road", street:"Mettur Road", price:"₹7.5L per cent", size:"2000 sq.ft", soil:"Red Soil", owner:"Arthi", contact:"9000000035", status:"Available" },
+{ location:"Pondicherry - Auroville", street:"Auroville Road", price:"₹10.5L per cent", size:"2500 sq.ft", soil:"Black Soil", owner:"Maya", contact:"9000000089", status:"Unavailable" },
+{ location:"Nagapattinam - Coastal", street:"Ayyanar Street", price:"₹6.2L per cent", size:"1800 sq.ft", soil:"Clay Soil", owner:"Sundar", contact:"9000000050", status:"Available" },
+{ location:"Tirupattur - Green Meadows", street:"NH48", price:"₹6.8L per cent", size:"1850 sq.ft", soil:"Loamy Soil", owner:"Sathya", contact:"9000000046", status:"Unavailable" },
+{ location:"Kumbakonam - Temple View", street:"East Street", price:"₹5.9L per cent", size:"1700 sq.ft", soil:"Sandy Soil", owner:"Radha", contact:"9000000049", status:"Available" }
+]
+
+    };
+
+    const selected = localStorage.getItem("selectedType");
+
+    const titleMap = { 
+      house:"🏠 Rental Houses",
+      apartment:"🏢 Apartments",
+      land:"🌳 Land for Sale"
+    };
+    document.getElementById("title").textContent = titleMap[selected];
+
+    let container = document.getElementById("list");
+    let list = properties[selected];
+
+    function render(filteredList){
+      container.innerHTML = "";
+      filteredList.forEach(p=>{
+        let card = document.createElement("div");
+        card.className = "property-card";
+        card.innerHTML = `
+          <h3>${p.location}</h3>
+          <p><strong>Street:</strong> ${p.street}</p>
+          <p><strong>Price:</strong> ${p.price}</p>
+          <p><strong>Size:</strong> ${p.size}</p>
+          <p><strong>Owner:</strong> ${p.owner}</p>
+          <p><strong>Contact:</strong> ${p.contact}</p>
+          <p><strong>Status:</strong> 
+            <span class="status-${p.status.toLowerCase()}">${p.status}</span>
+          </p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    render(list);
+
+    document.getElementById("search").addEventListener("input", function(){
+      let text = this.value.toLowerCase();
+      let filtered = list.filter(p =>
+        p.location.toLowerCase().startsWith(text) ||
+        p.street.toLowerCase().startsWith(text) ||
+        p.owner.toLowerCase().startsWith(text)
+      );
+      render(filtered);
+    });
+
+    function back(){
+      window.location.href = "selection.html";
+    }
+  </script>
+
+</body>
+</html>
