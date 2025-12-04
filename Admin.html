@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #8e2de2, #4a00e0);
+      font-family: "Poppins", sans-serif;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      color: #4a00e0;
+      border-radius: 18px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.4rem;
+      margin-bottom: 1rem;
+      border-radius: 7px;
+      border: 1px solid #999;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.8rem 1.4rem;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 1rem;
+    }
+
+    .purple-btn {
+      background: #4a00e0;
+      color: white;
+    }
+
+    .property-card {
+      background: white;
+      color:#4a00e0;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1rem;
+      text-align: left;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Admin Dashboard</h1>
+
+  <div class="container">
+    
+    <h2>Add Property</h2>
+
+    <label>Property Type</label>
+    <select id="pType">
+      <option value="house">House</option>
+      <option value="apartment">Apartment</option>
+      <option value="land">Land</option>
+    </select>
+
+    <label>Location</label>
+    <input type="text" id="pLocation">
+
+    <label>Price</label>
+    <input type="text" id="pPrice">
+
+    <label>Size / Area</label>
+    <input type="text" id="pSize">
+
+    <button class="purple-btn" onclick="saveProperty()">SAVE</button>
+    <button onclick="viewList()">VIEW ALL</button>
+    <button onclick="logout()">LOGOUT</button>
+
+    <div id="propertyDisplay"></div>
+
+  </div>
+
+  <script>
+
+    function saveProperty(){
+      let type = document.getElementById("pType").value;
+      let location = document.getElementById("pLocation").value.trim();
+      let price = document.getElementById("pPrice").value.trim();
+      let size = document.getElementById("pSize").value.trim();
+
+      if(!location || !price || !size){
+        alert("❗ Please fill all details");
+        return;
+      }
+
+      let newItem = { location, price, size };
+
+      let data = JSON.parse(localStorage.getItem(type)) || [];
+      data.push(newItem);
+      localStorage.setItem(type, JSON.stringify(data));
+
+      alert("✅ Property Added Successfully!");
+
+      document.getElementById("pLocation").value="";
+      document.getElementById("pPrice").value="";
+      document.getElementById("pSize").value="";
+    }
+
+    function viewList(){
+      let display = document.getElementById("propertyDisplay");
+      display.innerHTML = "";
+
+      ["house","apartment","land"].forEach(type=>{
+        let data = JSON.parse(localStorage.getItem(type)) || [];
+        data.forEach(p=>{
+          let box = document.createElement("div");
+          box.className="property-card";
+          box.innerHTML = `
+            <strong>${type.toUpperCase()}</strong><br>
+            Location: ${p.location}<br>
+            Price: ${p.price}<br>
+            Size: ${p.size}<br><br>
+          `;
+          display.appendChild(box);
+        });
+      });
+    }
+
+    function logout(){
+      alert("Logged out successfully!");
+      window.location.href = "login.html";  // ❗ Make sure login.html exists
+    }
+
+    // Auto-show properties when page loads (optional)
+    window.onload = viewList;
+
+  </script>
+
+</body>
+</html>
